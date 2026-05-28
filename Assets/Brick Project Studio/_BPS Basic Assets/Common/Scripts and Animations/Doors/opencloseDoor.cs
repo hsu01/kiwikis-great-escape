@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,8 +11,11 @@ namespace SojaExiles
         public bool open;
         public Transform Player;
 
-        public float interactDistance = 3f;
-        public GameObject interactMessage; // drag UI text object here
+        // NEW: This will appear in the Inspector so you can easily adjust it
+        public float interactDistance = 15f;
+
+        // NEW: Drag your UI object (Text, Image, Panel, etc.) here
+        public GameObject interactPrompt;
 
         private bool isAnimating = false;
 
@@ -19,38 +23,51 @@ namespace SojaExiles
         {
             open = false;
 
-            if (interactMessage != null)
+            // Make sure the UI prompt is hidden when the game first starts
+            if (interactPrompt != null)
             {
-                interactMessage.SetActive(false);
+                interactPrompt.SetActive(false);
             }
         }
 
         void Update()
         {
-            if (Player == null)
-                return;
-
-            float dist = Vector3.Distance(Player.position, transform.position);
-            bool playerNearby = dist <= interactDistance;
-
-            // Show/hide UI message based on distance
-            if (interactMessage != null)
+            if (Player)
             {
-                interactMessage.SetActive(playerNearby);
-            }
+                // Check the distance between the player and the door
+                float dist = Vector3.Distance(Player.position, transform.position);
 
-            if (playerNearby &&
-                Keyboard.current != null &&
-                Keyboard.current.eKey.wasPressedThisFrame &&
-                !isAnimating)
-            {
-                if (!open)
+                // Use the custom interactDistance instead of a hardcoded number
+                if (dist <= interactDistance)
                 {
-                    StartCoroutine(opening());
+                    // Player is close enough: Show the UI prompt
+                    if (interactPrompt != null)
+                    {
+                        interactPrompt.SetActive(true);
+                    }
+
+                    // Check if they press E to interact
+                    if (Keyboard.current != null &&
+                        Keyboard.current.eKey.wasPressedThisFrame &&
+                        !isAnimating)
+                    {
+                        if (open == false)
+                        {
+                            StartCoroutine(opening());
+                        }
+                        else
+                        {
+                            StartCoroutine(closing());
+                        }
+                    }
                 }
                 else
                 {
-                    StartCoroutine(closing());
+                    // Player is too far away: Hide the UI prompt
+                    if (interactPrompt != null)
+                    {
+                        interactPrompt.SetActive(false);
+                    }
                 }
             }
         }
@@ -58,24 +75,20 @@ namespace SojaExiles
         IEnumerator opening()
         {
             isAnimating = true;
-            Debug.Log("you are opening the door");
-
+            print("you are opening the door");
             openandclose.Play("Opening");
             open = true;
-
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(.5f);
             isAnimating = false;
         }
 
         IEnumerator closing()
         {
             isAnimating = true;
-            Debug.Log("you are closing the door");
-
+            print("you are closing the door");
             openandclose.Play("Closing");
             open = false;
-
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(.5f);
             isAnimating = false;
         }
     }
