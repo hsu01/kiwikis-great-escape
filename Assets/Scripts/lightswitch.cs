@@ -1,41 +1,65 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class LightSwitch : MonoBehaviour
 {
+    [Header("Lights")]
     public Light[] lightsToToggle;
     public Renderer[] emissiveObjects;
 
+    [Header("Emission")]
     public Color emissionOnColor = new Color(1f, 0.75f, 0.45f);
     public float emissionIntensity = 2f;
 
+    [Header("UI")]
+    public GameObject interactMessage; // drag "Press E" text object here
+
+    [Header("State")]
     public bool lightsOn = true;
+
+    private bool playerNearby = false;
 
     private void Start()
     {
         ApplyLightState();
+
+        if (interactMessage != null)
+        {
+            interactMessage.SetActive(false);
+        }
     }
 
     private void Update()
     {
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        if (playerNearby && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
         {
-            Debug.Log("Mouse clicked");
+            ToggleLights();
+        }
+    }
 
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerNearby = true;
 
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (interactMessage != null)
             {
-                Debug.Log("Hit object: " + hit.collider.gameObject.name);
-
-                if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform))
-                {
-                    ToggleLights();
-                }
+                interactMessage.SetActive(true);
             }
-            else
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerNearby = false;
+
+            if (interactMessage != null)
             {
-                Debug.Log("Raycast hit nothing");
+                interactMessage.SetActive(false);
             }
         }
     }
@@ -43,7 +67,7 @@ public class LightSwitch : MonoBehaviour
     public void ToggleLights()
     {
         lightsOn = !lightsOn;
-        Debug.Log("Light switch clicked. Lights on: " + lightsOn);
+        Debug.Log("Light switch toggled. Lights on: " + lightsOn);
         ApplyLightState();
     }
 
