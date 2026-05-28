@@ -1,10 +1,12 @@
 using UnityEngine;
+using StarterAssets;
 
 public class CatAnimationController : MonoBehaviour
 {
-    private Animator animator;
-
     public CharacterController controller;
+    public StarterAssetsInputs input;
+
+    private Animator animator;
 
     void Start()
     {
@@ -13,11 +15,15 @@ public class CatAnimationController : MonoBehaviour
 
     void Update()
     {
-        Vector3 velocity = controller.velocity;
-        velocity.y = 0f;
+        float speed = controller.velocity.magnitude;
 
-        float speed = velocity.magnitude;
+        // Walk animation
+        animator.SetFloat("Speed", speed);
 
-        animator.SetBool("IsRunning", speed > 0.05f);
+        // Jump animation
+        if (input.jump)
+        {
+            animator.SetTrigger("Jump");
+        }
     }
 }
