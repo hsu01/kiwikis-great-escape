@@ -18,6 +18,9 @@ public class LightSwitch : MonoBehaviour
     [Header("State")]
     public bool lightsOn = true;
 
+    [Header("Hidden Paper Message")]
+    public GameObject paperMessage;
+
     private bool playerNearby = false;
 
     private void Start()
@@ -97,6 +100,12 @@ public class LightSwitch : MonoBehaviour
                     mat.SetColor("_EmissionColor", Color.black);
                 }
             }
+        }
+
+        // show message when lights off
+        if (paperMessage != null)
+        {
+            paperMessage.SetActive(!lightsOn);
         }
     }
 }

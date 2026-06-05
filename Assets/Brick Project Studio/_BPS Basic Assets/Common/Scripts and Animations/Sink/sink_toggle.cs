@@ -18,6 +18,13 @@ namespace SojaExiles
         [Header("FX")]
         public GameObject sinkFX; // drag your water/splash FX object here
 
+        [Header("Sound")]
+        public AudioSource sinkAudioSource;
+        public AudioClip sinkOnSound;
+        public AudioClip sinkLoopSound;
+        public AudioClip sinkOffSound;
+
+
         [Header("Animation State Names")]
         public string sinkOnAnimation = "sink_on";
         public string sinkOffAnimation = "sink_off";
@@ -43,6 +50,12 @@ namespace SojaExiles
             if (sinkAnimator != null)
             {
                 sinkAnimator.Play(sinkOffAnimation, 0, 0f);
+            }
+
+            if (sinkAudioSource != null)
+            {
+                sinkAudioSource.loop = false;
+                sinkAudioSource.Stop();
             }
         }
 
@@ -81,12 +94,22 @@ namespace SojaExiles
             sinkAnimator.Play(sinkOnAnimation, 0, 0f);
             sinkOn = true;
 
+
+
             // Optional: wait a little so FX starts after handle moves
             yield return new WaitForSeconds(0.25f);
 
             if (sinkFX != null)
             {
                 sinkFX.SetActive(true);
+            }
+
+            // Start looping water sound
+            if (sinkAudioSource != null && sinkLoopSound != null)
+            {
+                sinkAudioSource.clip = sinkLoopSound;
+                sinkAudioSource.loop = true;
+                sinkAudioSource.Play();
             }
 
             yield return new WaitForSeconds(0.25f);
@@ -104,6 +127,14 @@ namespace SojaExiles
             if (sinkFX != null)
             {
                 sinkFX.SetActive(false);
+            }
+
+            // Stop looping water sound
+            if (sinkAudioSource != null)
+            {
+                sinkAudioSource.Stop();
+                sinkAudioSource.loop = false;
+                sinkAudioSource.clip = null;
             }
 
             yield return new WaitForSeconds(0.5f);
