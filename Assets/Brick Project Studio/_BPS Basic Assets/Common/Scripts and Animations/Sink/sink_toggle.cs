@@ -29,6 +29,9 @@ namespace SojaExiles
         public string sinkOnAnimation = "sink_on";
         public string sinkOffAnimation = "sink_off";
 
+        [Header("Water Fill Plane")]
+        public SinkFillPlane sinkFillPlane;
+
         private bool playerInRange = false;
         private bool sinkOn = false;
         private bool isAnimating = false;
@@ -95,13 +98,18 @@ namespace SojaExiles
             sinkOn = true;
 
 
-
             // Optional: wait a little so FX starts after handle moves
             yield return new WaitForSeconds(0.25f);
 
             if (sinkFX != null)
             {
                 sinkFX.SetActive(true);
+            }
+
+
+            if (sinkFillPlane != null)
+            {
+                sinkFillPlane.StartFilling();
             }
 
             // Start looping water sound
@@ -135,6 +143,11 @@ namespace SojaExiles
                 sinkAudioSource.Stop();
                 sinkAudioSource.loop = false;
                 sinkAudioSource.clip = null;
+            }
+
+            if (sinkFillPlane != null)
+            {
+                sinkFillPlane.StopFilling();
             }
 
             yield return new WaitForSeconds(0.5f);
