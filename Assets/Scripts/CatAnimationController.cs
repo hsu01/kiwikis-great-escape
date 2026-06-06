@@ -24,6 +24,7 @@ public class CatAnimationController : MonoBehaviour
         if (input.jump)
         {
             animator.SetTrigger("Jump");
+            input.jump = false;
         }
     }
 }
