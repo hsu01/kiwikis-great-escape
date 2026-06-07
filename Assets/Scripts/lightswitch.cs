@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 using TMPro;
 
 public class LightSwitch : MonoBehaviour
@@ -20,6 +21,10 @@ public class LightSwitch : MonoBehaviour
 
     [Header("Hidden Paper Message")]
     public GameObject paperMessage;
+
+    [Header("Events")]
+    [Tooltip("Fired the moment the lights are switched ON (used to advance the tutorial).")]
+    public UnityEvent onLightsTurnedOn;
 
     private bool playerNearby = false;
 
@@ -72,6 +77,11 @@ public class LightSwitch : MonoBehaviour
         lightsOn = !lightsOn;
         Debug.Log("Light switch toggled. Lights on: " + lightsOn);
         ApplyLightState();
+
+        if (lightsOn)
+        {
+            onLightsTurnedOn?.Invoke();
+        }
     }
 
     private void ApplyLightState()
