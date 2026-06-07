@@ -23,6 +23,18 @@ namespace SojaExiles
         {
             open = false;
 
+            // The Player field is empty on the cabinet prefabs (a prefab can't
+            // reference a scene object), so resolve the cat by its "Player" tag,
+            // the same way Drawer_Pull_X does. Fall back to the inspector field.
+            if (Player == null)
+            {
+                var tagged = GameObject.FindGameObjectWithTag("Player");
+                if (tagged != null)
+                {
+                    Player = tagged.transform;
+                }
+            }
+
             // Make sure the UI prompt is hidden when the game first starts
             if (interactPrompt != null)
             {
