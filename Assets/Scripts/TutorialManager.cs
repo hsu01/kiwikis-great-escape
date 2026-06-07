@@ -34,6 +34,12 @@ public class TutorialManager : MonoBehaviour
     [TextArea] public string turnOnLightsMessage = "It's dark in here... find the light switch and press E to turn on the lights.";
     [TextArea] public string openDrawerMessage = "Now find the drawer and press E to open it.";
 
+    [Header("Highlights")]
+    [Tooltip("Glows during the TurnOnLights step. Put a TutorialHighlight on the light switch.")]
+    public TutorialHighlight lightSwitchHighlight;
+    [Tooltip("Glows during the OpenDrawer step. Put a TutorialHighlight on the drawer.")]
+    public TutorialHighlight drawerHighlight;
+
     [Header("State")]
     [SerializeField] private Step currentStep = Step.TurnOnLights;
 
@@ -79,6 +85,9 @@ public class TutorialManager : MonoBehaviour
         currentStep = Step.Complete;
         Debug.Log("[Tutorial] Drawer opened. Tutorial complete.");
 
+        // Stop the drawer glowing now that it's open (independent of the message timing).
+        UpdateHighlights();
+
         // Leave the "open the drawer" message on screen, then hide it after the
         // delay (do NOT swap the text).
         if (completeMessageDuration > 0f)
@@ -123,6 +132,21 @@ public class TutorialManager : MonoBehaviour
             case Step.Complete:
                 // Message stays as-is, then HideAfterDelay removes it.
                 break;
+        }
+
+        UpdateHighlights();
+    }
+
+    /// <summary>Glow only the object relevant to the current step.</summary>
+    private void UpdateHighlights()
+    {
+        if (lightSwitchHighlight != null)
+        {
+            lightSwitchHighlight.SetHighlighted(currentStep == Step.TurnOnLights);
+        }
+        if (drawerHighlight != null)
+        {
+            drawerHighlight.SetHighlighted(currentStep == Step.OpenDrawer);
         }
     }
 }
