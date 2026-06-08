@@ -309,17 +309,19 @@ namespace StarterAssets
                     _verticalVelocity = -2f;
                 }
 
-                // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                // Start a new jump if the jump button is pressed and we're not already in the middle of a jump
+                if (_input.jumpPressedThisFrame && _jumpTimeoutDelta <= 0.0f)
                 {
-                    // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
-                    // update animator if using character
+                    Debug.Log("JUMP FIRED. VerticalVelocity: " + _verticalVelocity);
+
                     if (_hasAnimator)
                     {
                         _animator.SetBool(_animIDJump, true);
                     }
+
+                    _input.ConsumeJumpInput(); // reset flags
                 }
 
                 // jump timeout
@@ -349,6 +351,7 @@ namespace StarterAssets
 
                 // if we are not grounded, do not jump
                 _input.jump = false;
+                _input.jumpPressedThisFrame = false; // ensure we don't jump again until the jump is released and pressed again
             }
 
             // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)

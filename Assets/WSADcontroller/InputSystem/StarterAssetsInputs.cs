@@ -11,7 +11,8 @@ namespace StarterAssets
 		public Vector2 move;
 		public Vector2 look;
 		public bool jump;
-		public bool sprint;
+        public bool jumpPressedThisFrame;
+        public bool sprint;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -36,10 +37,20 @@ namespace StarterAssets
 
 		public void OnJump(InputValue value)
 		{
-			JumpInput(value.isPressed);
-		}
+            if (value.isPressed)
+            {
+                jump = true;
+                jumpPressedThisFrame = true; // Set the flag to indicate that jump was pressed this frame
+            }
+        }
 
-		public void OnSprint(InputValue value)
+        public void ConsumeJumpInput()
+        {
+            jumpPressedThisFrame = false;
+            jump = false;
+        }
+
+        public void OnSprint(InputValue value)
 		{
 			SprintInput(value.isPressed);
 		}
