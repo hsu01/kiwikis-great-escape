@@ -9637,7 +9637,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '3rd Digit:
+  m_text: '3rd #:
 
     0'
   m_isRightToLeft: 0
@@ -12652,8 +12652,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialManager
   instructionText: {fileID: 22280817}
   instructionPanel: {fileID: 0}
-  completeMessageDuration: 6
-  turnOnLightsMessage: It's dark in here... find the light switch and press E to
+  completeMessageDuration: 1
+  turnOnLightsMessage: It's dark in here... Find the light switch and press E to
     turn on the lights.
   openDrawerMessage: Now find the drawer and press E to open it.
   lightSwitchHighlight: {fileID: 1242989022}
