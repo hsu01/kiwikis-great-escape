@@ -28,7 +28,7 @@ public class TutorialManager : MonoBehaviour
     [Tooltip("Optional panel to hide once the tutorial is done. Defaults to the instruction text's object.")]
     public GameObject instructionPanel;
     [Tooltip("Seconds the message stays on screen after the drawer is opened, before hiding (<= 0 keeps it forever).")]
-    public float completeMessageDuration = 6f;
+    public float completeMessageDuration = 3f;
 
     [Header("Step Messages")]
     [TextArea] public string turnOnLightsMessage = "It's dark in here... find the light switch and press E to turn on the lights.";
